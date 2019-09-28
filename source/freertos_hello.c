@@ -55,6 +55,8 @@
  * Definitions
  ******************************************************************************/
 
+#define LENGTH_STR_BUFFER   32
+
 /*******************************************************************************
  * Prototypes
  ******************************************************************************/
@@ -94,7 +96,7 @@ static void blinky_task(void *pvParameters)
 {
     int32_t lectAdc;
     bool ret;
-    char str[32];
+    char str[LENGTH_STR_BUFFER];
 
     uart_rtos_init();
 
@@ -106,7 +108,7 @@ static void blinky_task(void *pvParameters)
 
         if (ret)
         {
-            sprintf(str, "CONVERSION: %d\r", lectAdc);
+            snprintf(str, LENGTH_STR_BUFFER, "CONVERSION: %d\r", lectAdc);
             uart_rtos_envDatos((uint8_t*)str, strlen(str), portMAX_DELAY);
 
             PRINTF(str);
