@@ -48,6 +48,7 @@
 
 #include "board_dsi.h"
 #include "adc.h"
+#include  "uart_rtos.h"
 
 
 /*******************************************************************************
@@ -93,16 +94,22 @@ static void blinky_task(void *pvParameters)
 {
     int32_t lectAdc;
     bool ret;
+    char str[32];
+
+    uart_rtos_init();
 
     for (;;)
     {
         ret = adc_getValueBlocking(&lectAdc, 1000);
 
-     //   vTaskDelay(1000 / portTICK_PERIOD_MS);
+   //   vTaskDelay(1000 / portTICK_PERIOD_MS);
 
         if (ret)
         {
-            PRINTF("CONVERSION: %d\n", lectAdc);
+            sprintf(str, "CONVERSION: %d\r", lectAdc);
+            uart_rtos_envDatos((uint8_t*)str, strlen(str), portMAX_DELAY);
+
+            PRINTF(str);
         }
         else
         {
